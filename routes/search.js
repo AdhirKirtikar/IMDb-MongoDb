@@ -22,7 +22,7 @@ var languages = new Array();
 const { MongoClient } = require('mongodb');
 
 
-const findItems = async (srcTitle, srcYear, srcGenre) => {
+const findItems = async (srcTitle, srcYear, srcGenre, srcLanguage) => {
     genres = require('./index').genresExported;
     languages = require('./index').languagesExported;
 
@@ -39,14 +39,14 @@ const findItems = async (srcTitle, srcYear, srcGenre) => {
     });
     const collection = client.db("imdb").collection("movies");
     // perform actions on the collection object
-    const query = buildQuery(srcTitle, srcYear, srcGenre);
+    const query = buildQuery(srcTitle, srcYear, srcGenre, srcLanguage);
 
     // db.movies.find({ $and:[{ title: { "$regex": "Matrix", "$options": "iu" } }, { year: { $eq: 2003} } ]})
     findResult = await collection.find(query).toArray();
     client.close();
 };
 
-const buildQuery = (srcTitle, srcYear, srcGenre) => {
+const buildQuery = (srcTitle, srcYear, srcGenre, srcLanguage) => {
     var finalQuery = {} // empty Object
     var key = "$and";
     finalQuery[key] = []; // empty Array, which you can push() values into
@@ -66,7 +66,8 @@ const buildQuery = (srcTitle, srcYear, srcGenre) => {
         const yearQuery = { year: srcYear };
         finalQuery[key].push(yearQuery);
     }
-    console.log("srcGenre is", srcGenre);
+
+    console.log("srcGenre & srcLanguage", srcGenre, srcLanguage);
     if (srcGenre) {
         var genreFinalQuery = {} // empty Object
         var genreKey = "$or";
@@ -79,11 +80,25 @@ const buildQuery = (srcTitle, srcYear, srcGenre) => {
             genreFinalQuery[genreKey].push(genreQuery);
         });
         finalQuery[key].push(genreFinalQuery);
-        //console.log(JSON.stringify(genreFinalQuery));
     } else {
         console.log("srcGenre is NULL");
     }
 
+    if (srcLanguage) {
+        var languageFinalQuery = {} // empty Object
+        var languageKey = "$or";
+        languageFinalQuery[languageKey] = []; // empty Array, which you can push() values into
+        console.log("srcLanguage is not NULL");
+        srcLanguage.forEach(doc => {
+            console.log(doc);
+            const languageQuery = { language: { $regex: doc, $options: "iu" } };
+            console.log(languageQuery);
+            languageFinalQuery[languageKey].push(languageQuery);
+        });
+        finalQuery[key].push(languageFinalQuery);
+    } else {
+        console.log("srcLanguage is NULL");
+    }
     console.log(JSON.stringify(finalQuery));
     return finalQuery;
 }
@@ -95,8 +110,11 @@ router.post('/search', async function (req, res) {
     if (typeof (req.body.genre) == "string") {
         req.body.genre = [req.body.genre];
     }
-    await findItems(req.body.title, parseInt(req.body.year), req.body.genre);
-    res.render('index', { pagetitle: 'iMovieDB', movies: findResult, genres: genres, genreSelected: req.body.genre, languages: languages, title: req.body.title, year: parseInt(req.body.year) });
+    if (typeof (req.body.language) == "string") {
+        req.body.language = [req.body.language];
+    }
+    await findItems(req.body.title, parseInt(req.body.year), req.body.genre, req.body.language);
+    res.render('index', { pagetitle: 'iMovieDB', movies: findResult, genres: genres, genreSelected: req.body.genre, languages: languages, languageSelected: req.body.language, title: req.body.title, year: parseInt(req.body.year) });
 });
 
 module.exports = router;

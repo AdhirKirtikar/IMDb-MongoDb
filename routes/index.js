@@ -51,7 +51,7 @@ const populateChoices = async () => {
 /* GET home page. */
 router.get('/', async function (req, res) {
     await populateChoices();
-    res.render('index', { pagetitle: 'iMovieDB', movies: findResult, genres: genres, genreSelected: req.body.genre, languages: languages, title: req.body.title, year: parseInt(req.body.year) });
+    res.render('index', { pagetitle: 'iMovieDB', movies: findResult, genres: genres, genreSelected: req.body.genre, languages: languages, languageSelected: req.body.language, title: req.body.title, year: parseInt(req.body.year) });
 });
 
 module.exports = router;
