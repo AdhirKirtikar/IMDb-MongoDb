@@ -47,8 +47,8 @@ block content
           td
             label(for='numDuration') Duration
           td
-            input(type='number' name='duration' id='numDuration' placeholder='136' min=0 max=450 step=30 title='Enter the duration of the movie...')
-            span &nbsp;&nbsp;[&plusmn;30]
+            input(type='number' name='duration' id='numDuration' placeholder='136' min=0 max=450 step=10 value=duration title='Enter the duration of the movie...')
+            span &nbsp;&nbsp;or more
         tr
           td
             label(for='txtGenre') Genre
@@ -82,8 +82,8 @@ block content
           td
             label(for='numRating') Rating
           td
-            input(type='number' name='rating' id='numRating' placeholder='8.7' min=0 max=10 step=0.1 title='Select the rating of the movie...')
-            span &nbsp;&nbsp;[&plusmn;1.0]
+            input(type='number' name='rating' id='numRating' placeholder='8.7' min=0 max=10 step=0.1 value=rating title='Select the rating of the movie...')
+            span &nbsp;&nbsp;or more
           td
           td
             input(type='submit' id='btnSearch' value='Search' onclick='console.log("in Search");')
