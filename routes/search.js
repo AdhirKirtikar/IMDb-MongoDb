@@ -1,4 +1,4 @@
-//'use strict';
+'use strict';
 var express = require('express');
 var router = express.Router();
 require('dotenv').config();
@@ -22,7 +22,7 @@ var languages = new Array();
 const { MongoClient } = require('mongodb');
 
 
-const findItems = async (srcTitle, srcYear) => {
+const findItems = async (srcTitle, srcYear, srcGenre) => {
     genres = require('./index').genresExported;
     languages = require('./index').languagesExported;
 
@@ -30,24 +30,25 @@ const findItems = async (srcTitle, srcYear) => {
         `${process.env.DB_USER}` +
         ":" +
         `${process.env.DB_PASS}` +
-        "@imongodb.v9ek1.mongodb.net/imdb?retryWrites=true&w=majority";
+        "@" +
+        `${process.env.DB_NAME}` +
+        "/imdb?retryWrites=true&w=majority";
     const client = await MongoClient.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     });
     const collection = client.db("imdb").collection("movies");
     // perform actions on the collection object
-    const query = buildQuery(srcTitle, srcYear);
+    const query = buildQuery(srcTitle, srcYear, srcGenre);
 
     // db.movies.find({ $and:[{ title: { "$regex": "Matrix", "$options": "iu" } }, { year: { $eq: 2003} } ]})
     findResult = await collection.find(query).toArray();
     client.close();
 };
 
-const buildQuery = (srcTitle, srcYear) => {
-    const yearQuery = { year: srcYear };
+const buildQuery = (srcTitle, srcYear, srcGenre) => {
     var finalQuery = {} // empty Object
-    var key = '$and';
+    var key = "$and";
     finalQuery[key] = []; // empty Array, which you can push() values into
 
     if (srcTitle) {
@@ -62,8 +63,27 @@ const buildQuery = (srcTitle, srcYear) => {
         console.log(parseInt(srcYear), " Year is NULL");
     } else {
         console.log(parseInt(srcYear), " Year is not NULL");
+        const yearQuery = { year: srcYear };
         finalQuery[key].push(yearQuery);
     }
+    console.log("srcGenre is", srcGenre);
+    if (srcGenre) {
+        var genreFinalQuery = {} // empty Object
+        var genreKey = "$or";
+        genreFinalQuery[genreKey] = []; // empty Array, which you can push() values into
+        console.log("srcGenre is not NULL");
+        srcGenre.forEach(doc => {
+            console.log(doc);
+            const genreQuery = { genre: { $regex: doc, $options: "iu" } };
+            console.log(genreQuery);
+            genreFinalQuery[genreKey].push(genreQuery);
+        });
+        finalQuery[key].push(genreFinalQuery);
+        //console.log(JSON.stringify(genreFinalQuery));
+    } else {
+        console.log("srcGenre is NULL");
+    }
+
     console.log(JSON.stringify(finalQuery));
     return finalQuery;
 }
@@ -72,8 +92,11 @@ const buildQuery = (srcTitle, srcYear) => {
 router.post('/search', async function (req, res) {
     console.log("Params: ");
     console.log(req.body);
-    await findItems(req.body.title, parseInt(req.body.year));
-    res.render('index', { pagetitle: 'iMovieDB', movies: findResult, genres: genres, languages: languages, title: req.body.title, year: parseInt(req.body.year) });
+    if (typeof (req.body.genre) == "string") {
+        req.body.genre = [req.body.genre];
+    }
+    await findItems(req.body.title, parseInt(req.body.year), req.body.genre);
+    res.render('index', { pagetitle: 'iMovieDB', movies: findResult, genres: genres, genreSelected: req.body.genre, languages: languages, title: req.body.title, year: parseInt(req.body.year) });
 });
 
 module.exports = router;

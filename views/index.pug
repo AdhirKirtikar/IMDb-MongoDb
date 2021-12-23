@@ -54,7 +54,16 @@ block content
           td
             select(name='genre' id='txtGenre' placeholder='Sci-Fi' title='Select the genre of the movie...' multiple)
               each gen in genres
-                option(value=gen) #{gen}
+                if typeof genreSelected === "undefined"
+                  - genreSelected = ''
+                if genreSelected
+                  //if gen in genreSelected
+                  if genreSelected.find(element => element == gen)
+                    option(value=gen selected) #{gen}
+                  else
+                    option(value=gen) #{gen}
+                else
+                  option(value=gen) #{gen}
           td
             label(for='selLanguage') Language
           td
