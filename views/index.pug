@@ -1,0 +1,75 @@
+extends layout
+
+mixin horizontalCard(original_title, year, duration, country, language, genre, description, avg_vote, votes, reviews_from_users, reviews_from_critics, metascore)
+  div(class="card box")
+    h1(class="card-title")= original_title
+    div
+      ul
+        li(class="card-text show-dividers::before")= year
+        li(class="card-text show-dividers")= (Math.floor(duration/60)==0?"":Math.floor(duration/60)+" hrs ")+(duration%60==0?"":duration%60+" min")
+        li(class="card-text show-dividers")= country
+        li(class="card-text show-dividers")= language
+    div
+      p(class="card-text")= genre
+    div
+      p(class="card-text")= description
+    div(class="card-rating")
+      svg(xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--star AggregateRatingButton__RatingIcon-sc-1ll29m0-4 iAOIoP" id="iconContext-star" viewBox="0 0 24 24" fill="currentColor" role="presentation")
+        path(d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z")      
+      div(class="text-muted")= avg_vote
+      div(class="text-muted")= "/10"
+      div(class="text-muted show-dividers")= votes>1000000?Math.floor(votes/1000000 * 10)/10+"M":votes>1000?Math.floor(votes/1000)+"K":votes
+    div
+      ul
+        li(class="card-text show-dividers::before")= (reviews_from_users>1000000?Math.floor(reviews_from_users/1000000 * 10)/10+"M":reviews_from_users>1000?Math.floor(reviews_from_users/1000 * 10)/10+"K":reviews_from_users) + " User reviews"
+        li(class="card-text show-dividers")= (reviews_from_critics>1000000?Math.floor(reviews_from_critics/1000000 * 10)/10+"M":reviews_from_critics>1000?Math.floor(reviews_from_critics/1000 * 10)/10+"K":reviews_from_critics) + " Critic reviews"
+        li(class="card-text show-dividers")
+          div(class="metascore")= Math.floor(metascore)
+          div(class="metascore-label")= "Metascore"
+
+block content
+  h1= pagetitle
+  hr
+  div(class="search box") Search a movie...
+    form(action="/search" method="POST")
+      table
+        tr
+          td
+            label(for='txtTitle') Title
+          td
+            input(type='text' name='title' id='txtTitle' placeholder='Matrix' value=title title='Enter movie name or words to search for...')
+        tr
+          td
+            label(for='numYear') Year
+          td
+            input(type='number' name='year' id='numYear' placeholder='1999' min=1900 max=2099 value=year title='Select the year of release...')
+          //tr
+          td
+            label(for='numDuration') Duration
+          td
+            input(type='number' name='duration' id='numDuration' placeholder='136' min=0 max=450 step=30 title='Enter the duration of the movie...')
+        tr
+          td
+            label(for='txtGenre') Genre
+          td
+            select(name='genre' id='txtGenre' placeholder='Sci-Fi' title='Select the genre of the movie...' multiple)
+              each gen in genres
+                option(value=gen) #{gen}
+          td
+            label(for='selLanguage') Language
+          td
+            select(name='language' id='selLanguage' placeholder='English' title='Select the language of the movie...' multiple)
+              each lang in languages
+                option(value=lang) #{lang}
+        tr
+          td
+            label(for='numRating') Rating
+          td
+            input(type='number' name='rating' id='numRating' placeholder='8.7' min=0 max=10 step=0.1 title='Select the rating of the movie...')
+          td
+          td
+            input(type='submit' id='btnSearch' value='Search' onclick='console.log("in Search");')
+
+  div(class="card-deck")
+    each item in movies
+      +horizontalCard(item.original_title, item.year, item.duration, item.country, item.language, item.genre, item.description, item.avg_vote, item.votes, item.reviews_from_users, item.reviews_from_critics, item.metascore)

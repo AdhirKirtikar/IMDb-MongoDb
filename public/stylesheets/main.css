@@ -1,0 +1,140 @@
+body {
+    font-family: 'Titillium Web', sans-serif;
+    background: #e3e3e3;
+}
+
+.box {
+    font-family: 'Titillium Web', sans-serif;
+    border-width: 1px;
+    border-style: solid;
+    border-color: darkgray;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    background-color: lightgray;
+    box-shadow: 4px 4px 8px Gray;
+    z-index: 100;
+    opacity: 0.9;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 200px;
+    max-width: 500px;
+}
+.search {
+    align-items: center;
+}
+
+.show-dividers:before {
+    display: inline-block;
+    margin: 0 0.4rem 0.1rem;
+    content: '';
+    font-size: 1rem;
+    line-height: .5rem;
+    padding: 1px;
+    border-radius: 50%;
+    vertical-align: middle;
+    background-color: currentColor;
+}
+
+h1 {
+    margin: 0;
+    text-shadow: 1px 1px 2px gray;
+    text-align: center;
+}
+
+.card-title {
+    text-align: left;
+}
+
+ul {
+    padding-inline-start: 0;
+    margin: 3px 0;
+    line-height: 1.3rem;
+}
+ul li.card-text {
+    font-family: 'Titillium Web', sans-serif;
+    list-style-type: none;
+    margin: 0;
+    padding: 3px;
+    align-items: center;
+    display: inline-flex;
+    flex-wrap: wrap;
+    vertical-align: middle;
+}
+
+p.card-text {
+    margin: 10px 3px;
+}
+
+.metascore {
+    color: rgb(255, 255, 255);
+    background-color: #54A72A;
+    padding: 2px;
+}
+.metascore-label {
+    padding: 2px;
+}
+
+div.card-rating {
+    margin: 3px 0;
+    display: inline-flex;
+    flex-wrap: wrap;
+}
+
+
+input {
+    font-family: 'Titillium Web', sans-serif;
+    width: 380px;
+    border: 1px Solid Gray;
+    background: #e3e3e3;
+    text-align: left;
+    margin-left: 5px;
+    border-radius: 5px;
+}
+
+select {
+    font-family: 'Titillium Web', sans-serif;
+    width: 120px;
+    border: 1px Solid Gray;
+    background: #e3e3e3;
+    text-align: left;
+    margin-left: 5px;
+    border-radius: 5px;
+}
+
+input[type="number"] {
+    width: 50px;
+    border-radius: 5px;
+}
+
+table, tbody {
+    width: 450px;
+    display: block;
+}
+
+td {
+    min-width: 10px;
+    max-width: 180px;
+}
+
+input[type="submit"] {
+    font-family: 'Titillium Web', sans-serif;
+    width: 80px;
+    border: 1px Solid gray;
+    border-radius: 5px;
+    padding: 5px;
+    line-height: 0.8em;
+    background-color: gray;
+    box-shadow: 2px 2px 4px Gray;
+    text-align: center;
+}
+
+input[type="submit"]:hover {
+    background-color: darkgray;
+}
+
+input[type="submit"]:active {
+    background-color: gray;
+    box-shadow: 1px 1px 2px LightGray;
+}
