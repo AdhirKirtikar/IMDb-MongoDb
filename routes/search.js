@@ -2,6 +2,7 @@
 var express = require('express');
 var router = express.Router();
 require('dotenv').config();
+var ObjectId = require('mongodb').ObjectID;
 
 var findResult = [
     {
@@ -12,7 +13,20 @@ var findResult = [
         duration: 136,
         country: 'USA',
         language: 'English',
-        avg_vote: 8.7
+        avg_vote: 8.7,
+        details: [{}]
+    }
+];
+
+var findPrincipals = [
+    {
+        _id: new ObjectId("61bccb3b285ee7ddb952e0d0"),
+        imdb_title_id: 'tt8569206',
+        ordering: 1,
+        imdb_name_id: 'nm1024101',
+        category: 'actor',
+        job: 'actor',
+        characters: '["Dushyant"]'
     }
 ];
 
@@ -21,40 +35,17 @@ var languages = new Array();
 
 const { MongoClient } = require('mongodb');
 
-
-const findItems = async (srcTitle, srcYear, srcGenre, srcLanguage, srcDuration, srcRating) => {
-    genres = require('./index').genresExported;
-    languages = require('./index').languagesExported;
-
-    const uri = "mongodb+srv://" +
-        `${process.env.DB_USER}` +
-        ":" +
-        `${process.env.DB_PASS}` +
-        "@" +
-        `${process.env.DB_NAME}` +
-        "/imdb?retryWrites=true&w=majority";
-    const client = await MongoClient.connect(uri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    });
-    const collection = client.db("imdb").collection("movies");
-    // perform actions on the collection object
-    const query = buildQuery(srcTitle, srcYear, srcGenre, srcLanguage, srcDuration, srcRating);
-
-    // db.movies.find({ $and:[{ title: { "$regex": "Matrix", "$options": "iu" } }, { year: { $eq: 2003} } ]})
-    findResult = await collection.find(query).toArray();
-    client.close();
-};
-
 const buildQuery = (srcTitle, srcYear, srcGenre, srcLanguage, srcDuration, srcRating) => {
     var finalQuery = {} // empty Object
     var key = "$and";
     finalQuery[key] = []; // empty Array, which you can push() values into
 
     if (srcTitle) {
+        console.log(srcTitle, " Title is not NULL");
         const titleQuery = { title: { $regex: srcTitle, $options: "iu" } };
         finalQuery[key].push(titleQuery);
     } else {
+        console.log(srcTitle, " Title is NULL");
         //const titleQuery = { title: { $regex: "Dobby", $options: "iu" } };
         //finalQuery[key].push(titleQuery);
     }
@@ -104,7 +95,7 @@ const buildQuery = (srcTitle, srcYear, srcGenre, srcLanguage, srcDuration, srcRa
         console.log(parseInt(srcDuration), " Duration is NULL");
     } else {
         console.log(parseInt(srcDuration), " Duration is not NULL");
-        const durationQuery = { duration: { $gte: srcDuration} };
+        const durationQuery = { duration: { $gte: srcDuration } };
         finalQuery[key].push(durationQuery);
     }
 
@@ -119,6 +110,65 @@ const buildQuery = (srcTitle, srcYear, srcGenre, srcLanguage, srcDuration, srcRa
     console.log(JSON.stringify(finalQuery));
     return finalQuery;
 }
+
+const findDetails = async (imdb_title_id) => {
+    const uri = "mongodb+srv://" +
+        `${process.env.DB_USER}` +
+        ":" +
+        `${process.env.DB_PASS}` +
+        "@" +
+        `${process.env.DB_NAME}` +
+        "/imdb?retryWrites=true&w=majority";
+    const client = await MongoClient.connect(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
+    const collectionPrincipals = client.db("imdb").collection("principals");
+    // perform actions on the collection object
+    const queryPrincipals = { imdb_title_id: `${imdb_title_id}` };
+    // db.principals.find({imdb_title_id: "tt0000574"})
+    findPrincipals = await collectionPrincipals.find(queryPrincipals).toArray();
+
+    const collectionNames = client.db("imdb").collection("names");
+    for (let i = 0; i < findPrincipals.length; i++) {
+        const queryNames = { imdb_name_id: `${findPrincipals[i].imdb_name_id}` };
+        // db.names.find({imdb_name_id:"nm1024101"})
+        const imdbNameDetails = await collectionNames.find(queryNames).toArray();
+        findPrincipals[i]["imdb_name_details"] = imdbNameDetails[0];
+        findPrincipals[i]["imdb_name"] = findPrincipals[i].imdb_name_details.name;
+    }
+    //console.log(findPrincipals);
+    client.close();
+    return findPrincipals;
+};
+
+const findItems = async (srcTitle, srcYear, srcGenre, srcLanguage, srcDuration, srcRating) => {
+    genres = require('./index').genresExported;
+    languages = require('./index').languagesExported;
+
+    const uri = "mongodb+srv://" +
+        `${process.env.DB_USER}` +
+        ":" +
+        `${process.env.DB_PASS}` +
+        "@" +
+        `${process.env.DB_NAME}` +
+        "/imdb?retryWrites=true&w=majority";
+    const client = await MongoClient.connect(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
+    const collection = client.db("imdb").collection("movies");
+    // perform actions on the collection object
+    const query = buildQuery(srcTitle, srcYear, srcGenre, srcLanguage, srcDuration, srcRating);
+
+    // db.movies.find({ $and:[{ title: { "$regex": "Matrix", "$options": "iu" } }, { year: { $eq: 2003} } ]})
+    findResult = await collection.find(query).toArray();
+    for (let i = 0; i < findResult.length; i++) {
+        findResult[i]["principals"] = await findDetails(findResult[i].imdb_title_id);
+    }
+    //console.log("Final Result:", JSON.stringify(findResult));
+    client.close();
+};
 
 /* GET home page. */
 router.post('/search', async function (req, res) {

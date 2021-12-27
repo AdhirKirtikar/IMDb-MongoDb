@@ -1,7 +1,7 @@
 extends layout
 
-mixin horizontalCard(original_title, year, duration, country, language, genre, description, avg_vote, votes, reviews_from_users, reviews_from_critics, metascore)
-  div(class="card box")
+mixin mainCard(imdb_title_id, original_title, year, duration, country, language, genre, description, avg_vote, votes, reviews_from_users, reviews_from_critics, metascore)
+  div(class="main card box")
     h1(class="card-title")= original_title
     div
       ul
@@ -18,14 +18,27 @@ mixin horizontalCard(original_title, year, duration, country, language, genre, d
         path(d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z")      
       div(class="text-muted")= avg_vote
       div(class="text-muted")= "/10"
-      div(class="text-muted show-dividers")= votes>1000000?Math.floor(votes/1000000 * 10)/10+"M":votes>1000?Math.floor(votes/1000)+"K":votes
+      div(class="text-muted show-dividers")= (votes?(votes>1000000?Math.floor(votes/1000000 * 10)/10+"M":votes>1000?Math.floor(votes/1000)+"K":votes):"NA") + " votes"
     div
       ul
-        li(class="card-text show-dividers::before")= (reviews_from_users>1000000?Math.floor(reviews_from_users/1000000 * 10)/10+"M":reviews_from_users>1000?Math.floor(reviews_from_users/1000 * 10)/10+"K":reviews_from_users) + " User reviews"
-        li(class="card-text show-dividers")= (reviews_from_critics>1000000?Math.floor(reviews_from_critics/1000000 * 10)/10+"M":reviews_from_critics>1000?Math.floor(reviews_from_critics/1000 * 10)/10+"K":reviews_from_critics) + " Critic reviews"
+        li(class="card-text show-dividers::before")= (reviews_from_users?(reviews_from_users>1000000?Math.floor(reviews_from_users/1000000 * 10)/10+"M":reviews_from_users>1000?Math.floor(reviews_from_users/1000 * 10)/10+"K":reviews_from_users):"NA") + " User reviews"
+        li(class="card-text show-dividers")= (reviews_from_critics?(reviews_from_critics>1000000?Math.floor(reviews_from_critics/1000000 * 10)/10+"M":reviews_from_critics>1000?Math.floor(reviews_from_critics/1000 * 10)/10+"K":reviews_from_critics):"NA") + " Critic reviews"
         li(class="card-text show-dividers")
-          div(class="metascore")= Math.floor(metascore)
+          div(class="metascore")= metascore?metascore:"NA"
           div(class="metascore-label")= "Metascore"
+        li(class="card-text show-dividers")
+          div(class="cast-link" onclick=`document.querySelectorAll('.cast.card.box.${imdb_title_id}')[0].style.display=='block'?document.querySelectorAll('.cast.card.box.${imdb_title_id}')[0].style.display='none':document.querySelectorAll('.cast.card.box.${imdb_title_id}')[0].style.display='block'`)= "Cast >>"
+
+mixin castCard(imdb_title_id, principals)
+  div(class=`cast card box ${imdb_title_id}` style="display:none;")
+    h2(class="card-title")= "Cast & Crew"
+    table
+      each principal in principals
+        tr
+          td #{principal.imdb_name}
+          td #{principal.category}
+          td #{principal.characters}
+
 
 block content
   h1= pagetitle
@@ -90,4 +103,5 @@ block content
 
   div(class="card-deck")
     each item in movies
-      +horizontalCard(item.original_title, item.year, item.duration, item.country, item.language, item.genre, item.description, item.avg_vote, item.votes, item.reviews_from_users, item.reviews_from_critics, item.metascore)
+      +mainCard(item.imdb_title_id, item.original_title, item.year, item.duration, item.country, item.language, item.genre, item.description, item.avg_vote, item.votes, item.reviews_from_users, item.reviews_from_critics, Math.floor(item.metascore))
+      +castCard(item.imdb_title_id, item.principals)

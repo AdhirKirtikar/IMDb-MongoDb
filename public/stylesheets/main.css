@@ -1,17 +1,29 @@
 body {
     font-family: 'Titillium Web', sans-serif;
     background: #e3e3e3;
+    width: 1000px;
 }
+.card-deck {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: stretch;
+    align-content: center;
+}
+
+    .card-deck > div {
+        flex: 50%;
+    }
 
 .box {
     font-family: 'Titillium Web', sans-serif;
     border-width: 1px;
     border-style: solid;
-    border-color: darkgray;
+    border-color: DarkGray;
     border-radius: 10px;
     padding: 10px;
     margin: 10px;
-    background-color: lightgray;
+    background-color: LightGray;
     box-shadow: 4px 4px 8px Gray;
     z-index: 100;
     opacity: 0.9;
@@ -20,9 +32,17 @@ body {
     margin-right: auto;
     min-width: 200px;
     max-width: 500px;
+    width: 100%;
 }
 .search {
     align-items: center;
+}
+
+.cast {
+    display: none;
+    flex-wrap: wrap;
+    min-width: 200px;
+    max-width: 450px;
 }
 
 .show-dividers:before {
@@ -31,15 +51,15 @@ body {
     content: '';
     font-size: 1rem;
     line-height: .5rem;
-    padding: 1px;
+    padding: 2px;
     border-radius: 50%;
     vertical-align: middle;
-    background-color: currentColor;
+    background-color: DimGray;
 }
 
 h1 {
     margin: 0;
-    text-shadow: 1px 1px 2px gray;
+    text-shadow: 1px 1px 2px Gray;
     text-align: center;
 }
 
@@ -121,20 +141,20 @@ td {
 input[type="submit"] {
     font-family: 'Titillium Web', sans-serif;
     width: 80px;
-    border: 1px Solid gray;
+    border: 1px Solid Gray;
     border-radius: 5px;
     padding: 5px;
     line-height: 0.8em;
-    background-color: gray;
+    background-color: Gray;
     box-shadow: 2px 2px 4px Gray;
     text-align: center;
 }
 
 input[type="submit"]:hover {
-    background-color: darkgray;
+    background-color: DarkGray;
 }
 
 input[type="submit"]:active {
-    background-color: gray;
+    background-color: Gray;
     box-shadow: 1px 1px 2px LightGray;
 }
