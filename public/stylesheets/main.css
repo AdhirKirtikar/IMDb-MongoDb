@@ -11,9 +11,9 @@ body {
     align-content: center;
 }
 
-    .card-deck > div {
-        flex: 50%;
-    }
+.card-deck > div {
+    flex: 50%;
+}
 
 .box {
     font-family: 'Titillium Web', sans-serif;
@@ -57,7 +57,7 @@ body {
     background-color: DimGray;
 }
 
-h1 {
+h1, h2 {
     margin: 0;
     text-shadow: 1px 1px 2px Gray;
     text-align: center;
@@ -136,9 +136,10 @@ table, tbody {
 td {
     min-width: 10px;
     max-width: 180px;
+    padding: 1px 5px;
 }
 
-input[type="submit"] {
+input[type="submit"], input[type="button"] {
     font-family: 'Titillium Web', sans-serif;
     width: 80px;
     border: 1px Solid Gray;
@@ -150,11 +151,11 @@ input[type="submit"] {
     text-align: center;
 }
 
-input[type="submit"]:hover {
+input[type="submit"]:hover, input[type="button"]:hover {
     background-color: DarkGray;
 }
 
-input[type="submit"]:active {
+input[type="submit"]:active, input[type="button"]:active {
     background-color: Gray;
     box-shadow: 1px 1px 2px LightGray;
 }

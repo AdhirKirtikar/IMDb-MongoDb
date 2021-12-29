@@ -27,7 +27,7 @@ mixin mainCard(imdb_title_id, original_title, year, duration, country, language,
           div(class="metascore")= metascore?metascore:"NA"
           div(class="metascore-label")= "Metascore"
         li(class="card-text show-dividers")
-          div(class="cast-link" onclick=`document.querySelectorAll('.cast.card.box.${imdb_title_id}')[0].style.display=='block'?document.querySelectorAll('.cast.card.box.${imdb_title_id}')[0].style.display='none':document.querySelectorAll('.cast.card.box.${imdb_title_id}')[0].style.display='block'`)= "Cast >>"
+          input(type="button" class="cast-link" onclick=`document.querySelectorAll('.cast.card.box.${imdb_title_id}')[0].style.display=='block'?document.querySelectorAll('.cast.card.box.${imdb_title_id}')[0].style.display='none':document.querySelectorAll('.cast.card.box.${imdb_title_id}')[0].style.display='block'` value="Cast >>")
 
 mixin castCard(imdb_title_id, principals)
   div(class=`cast card box ${imdb_title_id}` style="display:none;")
