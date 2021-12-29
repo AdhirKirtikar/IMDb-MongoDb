@@ -3,18 +3,6 @@ var express = require('express');
 var router = express.Router();
 require('dotenv').config();
 
-//var findResult = [
-//    {
-//        imdb_title_id: 'tt0133093',
-//        title: 'Matrix',
-//        year: 1999,
-//        genre: 'Action, Sci-Fi',
-//        duration: 136,
-//        country: 'USA',
-//        language: 'English',
-//        avg_vote: 8.7
-//    }
-//];
 var findResult = new Array;
 var genreSet = new Set();
 var genres = new Array();

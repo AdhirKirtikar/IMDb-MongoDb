@@ -4,19 +4,7 @@ var router = express.Router();
 require('dotenv').config();
 var ObjectId = require('mongodb').ObjectID;
 
-var findResult = [
-    {
-        imdb_title_id: 'tt0133093',
-        title: 'Dobby',
-        year: 1999,
-        genre: 'Action, Sci-Fi',
-        duration: 136,
-        country: 'USA',
-        language: 'English',
-        avg_vote: 8.7,
-        details: [{}]
-    }
-];
+var findResult = [{ "_id": "61bcc6c3285ee7ddb94076ae", "imdb_title_id": "tt8569206", "title": "Little Baby", "original_title": "Little Baby", "year": 2019, "date_published": "", "genre": "", "duration": 105, "country": "", "language": "", "director": "", "writer": "", "production_company": "", "actors": "", "description": "", "avg_vote": 9.2, "votes": 2095, "reviews_from_users": 27, "reviews_from_critics": 16, "principals": [{ "_id": "61bccb3b285ee7ddb952e0d1", "imdb_title_id": "tt8569206", "ordering": 2, "imdb_name_id": "nm10381851", "category": "actress", "characters": "[\"Shasha\"]", "imdb_name_details": { "_id": "61bcc87e285ee7ddb942f26e", "imdb_name_id": "nm10381851", "name": "Gulnaz Siganporia", "birth_name": "Gulnaz Siganporia", "bio": "", "spouses": 0, "divorces": 0, "spouses_with_children": 0, "children": 0 }, "imdb_name": "Gulnaz Siganporia" }] }];
 
 var findPrincipals = [
     {
@@ -46,8 +34,6 @@ const buildQuery = (srcTitle, srcYear, srcGenre, srcLanguage, srcDuration, srcRa
         finalQuery[key].push(titleQuery);
     } else {
         console.log(srcTitle, " Title is NULL");
-        //const titleQuery = { title: { $regex: "Dobby", $options: "iu" } };
-        //finalQuery[key].push(titleQuery);
     }
 
     if (Number.isNaN(srcYear)) {
@@ -163,12 +149,17 @@ const findItems = async (srcTitle, srcYear, srcGenre, srcLanguage, srcDuration, 
 
     // db.movies.find({ $and:[{ title: { "$regex": "Matrix", "$options": "iu" } }, { year: { $eq: 2003} } ]})
     findResult = await collection.find(query).toArray();
+
     for (let i = 0; i < findResult.length; i++) {
         findResult[i]["principals"] = await findDetails(findResult[i].imdb_title_id);
     }
-    //console.log("Final Result:", JSON.stringify(findResult));
+    console.log("Final Result:", JSON.stringify(findResult));
     client.close();
 };
+
+const renderPage = (reqParam, resParam) => {
+    resParam.render('index', { pagetitle: 'iMovieDB', movies: findResult, genres: genres, genreSelected: reqParam.body.genre, languages: languages, languageSelected: reqParam.body.language, title: reqParam.body.title, year: parseInt(reqParam.body.year), duration: parseInt(reqParam.body.duration), rating: Number(reqParam.body.rating) });
+}
 
 /* GET home page. */
 router.post('/search', async function (req, res) {
@@ -180,8 +171,10 @@ router.post('/search', async function (req, res) {
     if (typeof (req.body.language) == "string") {
         req.body.language = [req.body.language];
     }
+
     await findItems(req.body.title, parseInt(req.body.year), req.body.genre, req.body.language, parseInt(req.body.duration), Number(req.body.rating));
     res.render('index', { pagetitle: 'iMovieDB', movies: findResult, genres: genres, genreSelected: req.body.genre, languages: languages, languageSelected: req.body.language, title: req.body.title, year: parseInt(req.body.year), duration: parseInt(req.body.duration), rating: Number(req.body.rating) });
+
 });
 
 module.exports = router;
