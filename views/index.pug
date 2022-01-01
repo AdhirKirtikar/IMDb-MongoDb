@@ -27,7 +27,7 @@ mixin mainCard(imdb_title_id, original_title, year, duration, country, language,
           div(class="metascore")= metascore?metascore:"NA"
           div(class="metascore-label")= "Metascore"
         li(class="card-text show-dividers")
-          input(type="button" class="cast-link" onclick=`document.querySelectorAll('.cast.card.box.${imdb_title_id}')[0].style.display=='block'?document.querySelectorAll('.cast.card.box.${imdb_title_id}')[0].style.display='none':document.querySelectorAll('.cast.card.box.${imdb_title_id}')[0].style.display='block'` value="Cast >>")
+          input(type="button" class="cast-link" onclick=`document.querySelectorAll('.cast.card.box.${imdb_title_id}')[0].style.display=='block'?(document.querySelectorAll('.cast.card.box.${imdb_title_id}')[0].style.display='none', document.querySelectorAll('.cast.name.box.${imdb_title_id}').forEach((div) => {div.style.display='none'})):document.querySelectorAll('.cast.card.box.${imdb_title_id}')[0].style.display='block'` value="Cast >>")
 
 mixin castCard(imdb_title_id, principals)
   div(class=`cast card box ${imdb_title_id}` style="display:none;")
@@ -58,18 +58,22 @@ mixin castCard(imdb_title_id, principals)
         tr
           td Place of Birth
           td #{principal.imdb_name_details.place_of_birth}
-        tr
-          td Death Details
-          td #{principal.imdb_name_details.death_details}
-        tr
-          td Date of Death
-          td #{principal.imdb_name_details.date_of_death}
-        tr
-          td Place of Death
-          td #{principal.imdb_name_details.place_of_death}
-        tr
-          td Reason of Death
-          td #{principal.imdb_name_details.reason_of_death}
+        if principal.imdb_name_details.death_details
+          tr
+            td Death Details
+            td #{principal.imdb_name_details.death_details}
+        if principal.imdb_name_details.date_of_death
+          tr
+            td Date of Death
+            td #{principal.imdb_name_details.date_of_death}
+        if principal.imdb_name_details.place_of_death
+          tr
+            td Place of Death
+            td #{principal.imdb_name_details.place_of_death}
+        if principal.imdb_name_details.reason_of_death
+          tr
+            td Reason of Death
+            td #{principal.imdb_name_details.reason_of_death}
         tr
           td Spouses
           td #{principal.imdb_name_details.spouses_string}
@@ -84,7 +88,8 @@ mixin castCard(imdb_title_id, principals)
           td #{principal.imdb_name_details.children}
 
 block content
-  h1= pagetitle
+  h1
+    a(href="/" target="_self")= pagetitle
   hr
   div(class="search box") Search a movie...
     form(action="/search" method="POST")
@@ -103,13 +108,13 @@ block content
           td
             label(for='numDuration') Duration
           td
-            input(type='number' name='duration' id='numDuration' placeholder='136' min=0 max=450 step=10 value=duration title='Enter the duration of the movie...')
+            input(type='number' name='duration' id='numDuration' placeholder='136' min=0 max=450 step=10 value=duration title='Enter the duration of the movie (more than x minutes)...')
             span &nbsp;&nbsp;or more
         tr
           td
             label(for='txtGenre') Genre
           td
-            select(name='genre' id='txtGenre' placeholder='Sci-Fi' title='Select the genre of the movie...' multiple)
+            select(name='genre' id='txtGenre' placeholder='Sci-Fi' title='Select the genre of the movie (hold Control to select multiple)...' multiple)
               each gen in genres
                 if typeof genreSelected === "undefined"
                   - genreSelected = ''
@@ -123,7 +128,7 @@ block content
           td
             label(for='selLanguage') Language
           td
-            select(name='language' id='selLanguage' placeholder='English' title='Select the language of the movie...' multiple)
+            select(name='language' id='selLanguage' placeholder='English' title='Select the language of the movie (hold Control to select multiple)...' multiple)
               each lang in languages
                 if typeof languageSelected === "undefined"
                   - languageSelected = ''
@@ -138,11 +143,12 @@ block content
           td
             label(for='numRating') Rating
           td
-            input(type='number' name='rating' id='numRating' placeholder='8.7' min=0 max=10 step=0.1 value=rating title='Select the rating of the movie...')
+            input(type='number' name='rating' id='numRating' placeholder='8.7' min=0 max=10 step=0.1 value=rating title='Select the rating of the movie (more than x rating)...')
             span &nbsp;&nbsp;or more
           td
           td
-            input(type='submit' id='btnSearch' value='Search' onclick='console.log("in Search");')
+            input(type='submit' id='btnSearch' value='Search' onclick='console.log("in Search");' title='Search the above options (max 10 results)...')
+            span &nbsp;&nbsp;max 10
 
   div(class="card-deck-all")
     each item in movies

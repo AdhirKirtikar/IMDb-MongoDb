@@ -1,7 +1,26 @@
 body {
     font-family: 'Titillium Web', sans-serif;
-    background: #e3e3e3;
+    color: #222222;
+    background-color: #fdfdff;
+    opacity: 1;
+    background-image: linear-gradient(30deg, #f2f2f2 12%, transparent 12.5%, transparent 87%, #f2f2f2 87.5%, #f2f2f2), linear-gradient(150deg, #f2f2f2 12%, transparent 12.5%, transparent 87%, #f2f2f2 87.5%, #f2f2f2), linear-gradient(30deg, #f2f2f2 12%, transparent 12.5%, transparent 87%, #f2f2f2 87.5%, #f2f2f2), linear-gradient(150deg, #f2f2f2 12%, transparent 12.5%, transparent 87%, #f2f2f2 87.5%, #f2f2f2), linear-gradient(60deg, #f2f2f277 25%, transparent 25.5%, transparent 75%, #f2f2f277 75%, #f2f2f277), linear-gradient(60deg, #f2f2f277 25%, transparent 25.5%, transparent 75%, #f2f2f277 75%, #f2f2f277);
+    background-size: 10px 18px;
+    background-position: 0 0, 0 0, 5px 9px, 5px 9px, 0 0, 5px 9px;
 }
+
+a:link, a:visited {
+    text-decoration: none;
+    color: #222222;
+}
+
+a:hover, a:active {
+    text-shadow: 1px 1px 2px DarkGray;
+}
+
+a:active {
+    text-shadow: -1px -1px 2px LightGray;
+}
+
 .card-deck {
     display: flex;
     justify-content: center;
@@ -15,7 +34,7 @@ body {
 
 .box {
     font-family: 'Titillium Web', sans-serif;
-    border-width: 1px;
+    border-width: thin;
     border-style: solid;
     border-color: DarkGray;
     border-radius: 10px;
@@ -24,7 +43,6 @@ body {
     background-color: LightGray;
     box-shadow: 4px 4px 8px Gray;
     z-index: 100;
-    opacity: 0.9;
     display: block;
     min-width: 200px;
     max-width: 500px;
@@ -41,6 +59,10 @@ body {
     flex-wrap: wrap;
     min-width: 200px;
     max-width: 450px;
+}
+
+.name {
+    max-width: 600px;
 }
 
 .show-dividers:before {
@@ -104,7 +126,7 @@ div.card-rating {
 input {
     font-family: 'Titillium Web', sans-serif;
     width: 380px;
-    border: 1px Solid Gray;
+    border: Thin Solid Gray;
     background: #e3e3e3;
     text-align: left;
     margin-left: 5px;
@@ -114,7 +136,7 @@ input {
 select {
     font-family: 'Titillium Web', sans-serif;
     width: 120px;
-    border: 1px Solid Gray;
+    border: Thin Solid Gray;
     background: #e3e3e3;
     text-align: left;
     margin-left: 5px;
@@ -127,8 +149,9 @@ input[type="number"] {
 }
 
 table, tbody {
-    width: 450px;
+    width: 100%;
     display: block;
+    word-break: break-word;
 }
 
 td {
@@ -137,14 +160,27 @@ td {
     padding: 1px 5px;
 }
 
-div.cast.name.box > table > tbody > tr > td:last-child {
-    max-width: 300px;
+div.cast.card.box > table > tbody, div.cast.name.box > table > tbody {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+div.cast.card.box > table > tbody > tr > td:last-child, div.cast.name.box > table > tbody > tr > td:last-child {
+    max-width: 600px;
+}
+
+div.cast.name.box > table > tbody > tr > td:first-child {
+    min-width: 100px;
+}
+
+div.cast.card.box > table > tbody > tr > td:first-child > div {
+    padding: 0px 4px;
 }
 
 input[type="submit"], input[type="button"] {
     font-family: 'Titillium Web', sans-serif;
-    width: 80px;
-    border: 1px Solid Gray;
+    width: 60px;
+    border: Thin Solid Gray;
     border-radius: 5px;
     padding: 5px;
     line-height: 0.8em;
@@ -155,21 +191,25 @@ input[type="submit"], input[type="button"] {
 
 input[type="submit"]:hover, input[type="button"]:hover {
     background-color: DarkGray;
+    cursor: pointer;
+    box-shadow: 1px 1px 2px Gray;
 }
 
 input[type="submit"]:active, input[type="button"]:active {
     background-color: Gray;
-    box-shadow: 1px 1px 2px LightGray;
+    box-shadow: none;
 }
 
 td > div:hover {
-    color: Blue;
+    color: Black;
     box-shadow: 1px 1px 2px Gray;
+    text-shadow: 1px 1px 2px Gray;
     border-radius: 3px;
+    cursor: pointer;
 }
 
 td > div:active {
-    color: Red;
-    box-shadow: 1px 1px 2px Gray;
-    border-radius: 3px;
+    color: LightGray;
+    box-shadow: -1px -1px 2px Gray;
+    text-shadow: -1px -1px 2px Gray;
 }

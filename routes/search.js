@@ -115,6 +115,14 @@ const findDetails = async (imdb_title_id) => {
     // db.principals.find({imdb_title_id: "tt0000574"})
     findPrincipals = await collectionPrincipals.find(queryPrincipals).toArray();
 
+    for (let i = 0; i < findPrincipals.length; i++) {
+        if (findPrincipals[i]["characters"])
+        {
+            findPrincipals[i]["characters"] = findPrincipals[i]["characters"].replace(/\[\"/g, "").replace(/\"\]/g, "").replace(/\\\"/g, "\"");
+        }
+    }
+    //console.log(findPrincipals);
+
     const collectionNames = client.db("imdb").collection("names");
     for (let i = 0; i < findPrincipals.length; i++) {
         const queryNames = { imdb_name_id: `${findPrincipals[i].imdb_name_id}` };
@@ -146,14 +154,16 @@ const findItems = async (srcTitle, srcYear, srcGenre, srcLanguage, srcDuration, 
     const collection = client.db("imdb").collection("movies");
     // perform actions on the collection object
     const query = buildQuery(srcTitle, srcYear, srcGenre, srcLanguage, srcDuration, srcRating);
+    const limit = 10;        // max number of results
+    const sort = { year: 1 } // sort by year - ascending
 
     // db.movies.find({ $and:[{ title: { "$regex": "Matrix", "$options": "iu" } }, { year: { $eq: 2003} } ]})
-    findResult = await collection.find(query).toArray();
+    findResult = await collection.find(query).sort(sort).limit(limit).toArray();
 
     for (let i = 0; i < findResult.length; i++) {
         findResult[i]["principals"] = await findDetails(findResult[i].imdb_title_id);
     }
-    console.log("Final Result:", JSON.stringify(findResult));
+    //console.log("Final Result:", JSON.stringify(findResult));
     client.close();
 };
 
