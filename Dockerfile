@@ -5,7 +5,7 @@ COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
 RUN npm install --production --silent && mv node_modules ../
 COPY . .
 
-RUN apk add g++ make python
+RUN apk add g++ make python3
 RUN --mount=type=secret,id=DB_USER \
     --mount=type=secret,id=DB_PASS \
     --mount=type=secret,id=DB_NAME \
