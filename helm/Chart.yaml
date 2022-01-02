@@ -1,0 +1,9 @@
+apiVersion: v1
+name: imdb-mongodb-deployment
+description: Install IMDb-MongoDb Express App
+keywords:
+- imdbmongodbexpressapp 
+version: 1.0.0
+maintainers:
+- name: Adhir Kirtikar 
+  email: adhir.s.kirtikar@gmail.com 

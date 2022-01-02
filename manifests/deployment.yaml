@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: imdb-mongodb
+    tag: latest
+  name: imdb-mongodb
+  namespace: imdb-mongodb
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: imdb-mongodb
+      tag: latest
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: imdb-mongodb
+        tag: latest
+    spec:
+      containers:
+      - image: adhirkirtikar/imdb-mongodb:latest
+        imagePullPolicy: IfNotPresent
+        name: imdb-mongodb
+        resources:
+          requests:
+            cpu: 50m
+            memory: 256Mi

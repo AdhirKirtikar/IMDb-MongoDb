@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: imdb-mongodb
+  namespace: imdb-mongodb
+spec:
+  selector:
+    app: imdb-mongodb
+  ports:
+    - protocol: TCP
+      port: 4000 

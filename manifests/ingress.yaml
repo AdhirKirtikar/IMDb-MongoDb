@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app: imdb-mongodb
+  name: imdb-mongodb-ingress
+  namespace: imdb-mongodb
+spec:
+  rules:
+    - host: imdb-mongodb.d93de940-c91a-4eab-8eb7-83716d1dc00d.k8s.civo.com
+      http:
+        paths:
+          -
+            backend:
+              service:
+                name: imdb-mongodb
+                port:
+                  number: 4000
+            path: /
+            pathType: "Prefix"

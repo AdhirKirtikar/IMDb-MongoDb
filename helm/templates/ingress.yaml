@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app: {{ .Values.namespace.name }} 
+  name: {{ .Values.namespace.name }}-ingress
+  namespace: {{ .Values.namespace.name }}
+spec:
+  rules:
+    - host: {{ .Values.namespace.name }}.d93de940-c91a-4eab-8eb7-83716d1dc00d.k8s.civo.com
+      http:
+        paths:
+          -
+            backend:
+              service:
+                name: {{ .Values.namespace.name }} 
+                port:
+                  number: {{ .Values.service.port }}
+            path: /
+            pathType: "Prefix"

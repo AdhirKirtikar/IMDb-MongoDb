@@ -1,0 +1,18 @@
+namespace:
+  name: imdb-mongodb
+ 
+service:
+  port: 4000
+  type: ClusterIP
+
+image:
+  repository: adhirkirtikar/imdb-mongodb
+  tag: 0.1
+  pullPolicy: IfNotPresent
+
+replicaCount: 5
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 256Mi
