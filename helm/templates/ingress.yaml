@@ -5,11 +5,12 @@ metadata:
     kubernetes.io/ingress.class: traefik
   labels:
     app: {{ .Values.namespace.name }} 
+    app.kubernetes.io/instance: {{ .Values.namespace.name }}
   name: {{ .Values.namespace.name }}-ingress
   namespace: {{ .Values.namespace.name }}
 spec:
   rules:
-    - host: {{ .Values.namespace.name }}.d93de940-c91a-4eab-8eb7-83716d1dc00d.k8s.civo.com
+    - host: {{ .Values.dns.dnsname }}
       http:
         paths:
           -

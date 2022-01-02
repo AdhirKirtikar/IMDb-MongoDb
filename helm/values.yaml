@@ -7,7 +7,7 @@ service:
 
 image:
   repository: adhirkirtikar/imdb-mongodb
-  tag: 0.1
+  tag: 0.20
   pullPolicy: IfNotPresent
 
 replicaCount: 5
@@ -16,3 +16,6 @@ resources:
   requests:
     cpu: 50m
     memory: 256Mi
+
+dns:
+  dnsname: imdb-mongodb.dec96de7-e7f9-4b06-9f21-2e0f053e0bfd.k8s.civo.com

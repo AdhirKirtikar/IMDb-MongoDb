@@ -5,11 +5,12 @@ metadata:
     kubernetes.io/ingress.class: traefik
   labels:
     app: imdb-mongodb
+    app.kubernetes.io/instance: imdb-mongodb
   name: imdb-mongodb-ingress
   namespace: imdb-mongodb
 spec:
   rules:
-    - host: imdb-mongodb.d93de940-c91a-4eab-8eb7-83716d1dc00d.k8s.civo.com
+    - host: imdb-mongodb.dec96de7-e7f9-4b06-9f21-2e0f053e0bfd.k8s.civo.com
       http:
         paths:
           -
