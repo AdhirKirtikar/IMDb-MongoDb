@@ -12,7 +12,7 @@ RUN --mount=type=secret,id=DB_USER \
     export DB_USER=$(cat /run/secrets/DB_USER) && \
     export DB_PASS=$(cat /run/secrets/DB_PASS) && \
     export DB_NAME=$(cat /run/secrets/DB_NAME)
-RUN python genenv.py && \
+RUN python3 genenv.py && \
     echo $DB_NAME
 
 EXPOSE 4000
