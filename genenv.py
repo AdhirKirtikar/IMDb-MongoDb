@@ -5,6 +5,7 @@ def get_config_from_environment(env_content):
     env_content += "DB_USER={}\n".format(os.environ.get("DB_USER", ""))
     env_content += "DB_PASS={}\n".format(os.environ.get("DB_PASS", ""))
     env_content += "DB_NAME={}\n".format(os.environ.get("DB_NAME", ""))
+    env_content += "TEST={}\n".format(os.environ.get("TEST", ""))
     return env_content
 
 env_content = ""
