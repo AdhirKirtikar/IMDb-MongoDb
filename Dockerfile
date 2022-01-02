@@ -7,7 +7,8 @@ RUN --mount=type=secret,id=DB_USER \
     --mount=type=secret,id=DB_NAME \
     export DB_USER=$(cat /run/secrets/DB_USER) && \
     export DB_PASS=$(cat /run/secrets/DB_PASS) && \
-    export DB_NAME=$(cat /run/secrets/DB_NAME)
+    export DB_NAME=$(cat /run/secrets/DB_NAME) && \
+    echo $DB_NAME
 RUN npm install --production --silent && mv node_modules ../
 COPY . .
 EXPOSE 4000
