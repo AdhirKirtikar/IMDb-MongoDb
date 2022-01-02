@@ -29,6 +29,7 @@ jobs:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASS: ${{ secrets.DB_PASS }}
           DB_NAME: ${{ secrets.DB_NAME }}
+          directory: /home/runner/work/IMDb-MongoDb/IMDb-MongoDb
           file_name: .env        
       -
         name: Set Environment Variables
