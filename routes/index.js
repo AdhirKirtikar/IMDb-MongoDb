@@ -11,6 +11,7 @@ var languages = new Array();
 
 
 const populateChoices = async () => {
+    console.log("process.env.DB_NAME:", process.env.DB_NAME);
     const { MongoClient } = require('mongodb');
     const uri = "mongodb+srv://" +
         `${process.env.DB_USER}` +
