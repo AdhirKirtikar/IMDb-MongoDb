@@ -22,6 +22,14 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v2
+      - 
+        name: Make envfile
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASS: ${{ secrets.DB_PASS }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          file_name: .env        
       -
         name: Set Environment Variables
         run: |
@@ -51,12 +59,7 @@ jobs:
         with:
           context: .
           platforms: linux/amd64
-          push: true
-          secrets: |
-            "DB_USER=${{ secrets.DB_USER }}"
-            "DB_PASS=${{ secrets.DB_PASS }}"
-            "DB_NAME=${{ secrets.DB_NAME }}"
-            "TEST=${{ secrets.TEST }}"             
+          push: true           
           labels: |
             org.opencontainers.image.authors=${{ github.repository_owner }}
             org.opencontainers.image.created=${{ env.BUILD_DATE }}
