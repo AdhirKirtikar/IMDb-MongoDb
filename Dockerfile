@@ -2,6 +2,7 @@ FROM node:lts-alpine
 ENV env=development
 WORKDIR /usr/src/app
 COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
+RUN apk add g++ make python
 RUN --mount=type=secret,id=DB_USER \
     --mount=type=secret,id=DB_PASS \
     --mount=type=secret,id=DB_NAME \
