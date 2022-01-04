@@ -104,7 +104,7 @@ const findDetails = async (imdb_title_id) => {
         `${process.env.DB_PASS}` +
         "@" +
         `${process.env.DB_NAME}` +
-        "/imdb?retryWrites=true&w=majority&authMechanism=SCRAM-SHA-1&directConnection=true";
+        "/imdb?retryWrites=true&w=majority&authMechanism=SCRAM-SHA-1";
     const client = await MongoClient.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true
@@ -146,7 +146,7 @@ const findItems = async (srcTitle, srcYear, srcGenre, srcLanguage, srcDuration, 
         `${process.env.DB_PASS}` +
         "@" +
         `${process.env.DB_NAME}` +
-        "/imdb?retryWrites=true&w=majority&authMechanism=SCRAM-SHA-1&directConnection=true";
+        "/imdb?retryWrites=true&w=majority&authMechanism=SCRAM-SHA-1";
     const client = await MongoClient.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true
