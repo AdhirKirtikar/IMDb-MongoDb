@@ -88,6 +88,7 @@ mixin castCard(imdb_title_id, principals)
           td #{principal.imdb_name_details.children}
 
 block content
+  div(class="loading" style="display:none;") Loading&#8230;
   h1
     a(href="/" target="_self")= pagetitle
   hr
@@ -115,6 +116,8 @@ block content
             label(for='txtGenre') Genre
           td
             select(name='genre' id='txtGenre' placeholder='Sci-Fi' title='Select the genre of the movie (hold Control to select multiple)...' multiple)
+              if typeof genres === "undefined"
+                - genres = ''
               each gen in genres
                 if typeof genreSelected === "undefined"
                   - genreSelected = ''
@@ -147,7 +150,7 @@ block content
             span &nbsp;&nbsp;or more
           td
           td
-            input(type='submit' id='btnSearch' value='Search' onclick='console.log("in Search");' title='Search the above options (max 10 results)...')
+            input(type='submit' id='btnSearch' value='Search' onclick='document.querySelectorAll(".loading")[0].style.display="block";' title='Search the above options (max 10 results)...')
             span &nbsp;&nbsp;max 10
 
   div(class="card-deck-all")

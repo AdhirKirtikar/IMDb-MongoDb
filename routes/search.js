@@ -20,8 +20,24 @@ var findPrincipals = [
 
 var genres = new Array();
 var languages = new Array();
+var client;
 
-const { MongoClient } = require('mongodb');
+const mongoConnect = async () => {
+
+    const { MongoClient } = require('mongodb');
+
+    const uri = "mongodb+srv://" +
+        `${process.env.DB_USER}` +
+        ":" +
+        `${process.env.DB_PASS}` +
+        "@" +
+        `${process.env.DB_NAME}` +
+        "/imdb?retryWrites=true&w=majority&authMechanism=SCRAM-SHA-1";
+    client = await MongoClient.connect(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
+};
 
 const buildQuery = (srcTitle, srcYear, srcGenre, srcLanguage, srcDuration, srcRating) => {
     var finalQuery = {} // empty Object
@@ -98,30 +114,19 @@ const buildQuery = (srcTitle, srcYear, srcGenre, srcLanguage, srcDuration, srcRa
 }
 
 const findDetails = async (imdb_title_id) => {
-    const uri = "mongodb+srv://" +
-        `${process.env.DB_USER}` +
-        ":" +
-        `${process.env.DB_PASS}` +
-        "@" +
-        `${process.env.DB_NAME}` +
-        "/imdb?retryWrites=true&w=majority&authMechanism=SCRAM-SHA-1";
-    const client = await MongoClient.connect(uri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    });
     const collectionPrincipals = client.db("imdb").collection("principals");
     // perform actions on the collection object
     const queryPrincipals = { imdb_title_id: `${imdb_title_id}` };
     // db.principals.find({imdb_title_id: "tt0000574"})
     findPrincipals = await collectionPrincipals.find(queryPrincipals).toArray();
-
+    //console.log(findPrincipals[0]);
     for (let i = 0; i < findPrincipals.length; i++) {
         if (findPrincipals[i]["characters"])
         {
-            findPrincipals[i]["characters"] = findPrincipals[i]["characters"].replace(/\[\"/g, "").replace(/\"\]/g, "").replace(/\\\"/g, "\"");
+            findPrincipals[i]["characters"] = findPrincipals[i]["characters"].replace(/\[\"/g, "").replace(/\"\]/g, "").replace(/\\\"/g, "\"").replace(/\"\,\"/g, ", ");
         }
     }
-    //console.log(findPrincipals);
+    //console.log(findPrincipals[0]);
 
     const collectionNames = client.db("imdb").collection("names");
     for (let i = 0; i < findPrincipals.length; i++) {
@@ -132,7 +137,6 @@ const findDetails = async (imdb_title_id) => {
         findPrincipals[i]["imdb_name"] = findPrincipals[i].imdb_name_details.name;
     }
     //console.log(findPrincipals);
-    client.close();
     return findPrincipals;
 };
 
@@ -140,17 +144,6 @@ const findItems = async (srcTitle, srcYear, srcGenre, srcLanguage, srcDuration, 
     genres = require('./index').genresExported;
     languages = require('./index').languagesExported;
 
-    const uri = "mongodb+srv://" +
-        `${process.env.DB_USER}` +
-        ":" +
-        `${process.env.DB_PASS}` +
-        "@" +
-        `${process.env.DB_NAME}` +
-        "/imdb?retryWrites=true&w=majority&authMechanism=SCRAM-SHA-1";
-    const client = await MongoClient.connect(uri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    });
     const collection = client.db("imdb").collection("movies");
     // perform actions on the collection object
     const query = buildQuery(srcTitle, srcYear, srcGenre, srcLanguage, srcDuration, srcRating);
@@ -164,12 +157,7 @@ const findItems = async (srcTitle, srcYear, srcGenre, srcLanguage, srcDuration, 
         findResult[i]["principals"] = await findDetails(findResult[i].imdb_title_id);
     }
     //console.log("Final Result:", JSON.stringify(findResult));
-    client.close();
 };
-
-const renderPage = (reqParam, resParam) => {
-    resParam.render('index', { pagetitle: 'iMovieDB', movies: findResult, genres: genres, genreSelected: reqParam.body.genre, languages: languages, languageSelected: reqParam.body.language, title: reqParam.body.title, year: parseInt(reqParam.body.year), duration: parseInt(reqParam.body.duration), rating: Number(reqParam.body.rating) });
-}
 
 /* GET home page. */
 router.post('/search', async function (req, res) {
@@ -181,10 +169,16 @@ router.post('/search', async function (req, res) {
     if (typeof (req.body.language) == "string") {
         req.body.language = [req.body.language];
     }
-
-    await findItems(req.body.title, parseInt(req.body.year), req.body.genre, req.body.language, parseInt(req.body.duration), Number(req.body.rating));
-    res.render('index', { pagetitle: 'iMovieDB', movies: findResult, genres: genres, genreSelected: req.body.genre, languages: languages, languageSelected: req.body.language, title: req.body.title, year: parseInt(req.body.year), duration: parseInt(req.body.duration), rating: Number(req.body.rating) });
-
+    try {
+        await mongoConnect();
+        await findItems(req.body.title, parseInt(req.body.year), req.body.genre, req.body.language, parseInt(req.body.duration), Number(req.body.rating));
+        res.render('index', { pagetitle: 'iMovieDB', movies: findResult, genres: genres, genreSelected: req.body.genre, languages: languages, languageSelected: req.body.language, title: req.body.title, year: parseInt(req.body.year), duration: parseInt(req.body.duration), rating: Number(req.body.rating) });
+    } catch (e) {
+        console.error(e);
+    }
+    finally {
+        await client.close();
+    }
 });
 
 module.exports = router;

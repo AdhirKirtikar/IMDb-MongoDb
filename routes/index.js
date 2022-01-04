@@ -11,7 +11,7 @@ var languages = new Array();
 
 
 const populateChoices = async () => {
-    console.log("process.env.DB_NAME:", process.env.DB_NAME);
+    console.log("Connecting to ", process.env.DB_NAME);
     const { MongoClient } = require('mongodb');
     const uri = "mongodb+srv://" +
         `${process.env.DB_USER}` +
@@ -25,16 +25,22 @@ const populateChoices = async () => {
         useUnifiedTopology: true
     });
 
-    const collection = client.db("imdb").collection("movies");
-    var genreList = await collection.aggregate([{ $group: { _id: '$genre' } }]).toArray();
-    var languageList = await collection.aggregate([{ $match: { language: { $exists: true } } },{ $group: { _id: '$language' } }]).toArray();
-    genreList.forEach(doc => doc["_id"].split(",").forEach(dic => genreSet.add(dic.trim())));
-    languageList.forEach(doc => doc["_id"].split(",").forEach(dic => languageSet.add(dic.trim())));
-    genres = Array.from(genreSet).sort();
-    languages = Array.from(languageSet).sort();
-    client.close();
-    module.exports.genresExported = genres;
-    module.exports.languagesExported = languages;
+    try {
+        const collection = client.db("imdb").collection("movies");
+        var genreList = await collection.aggregate([{ $group: { _id: '$genre' } }]).toArray();
+        var languageList = await collection.aggregate([{ $match: { language: { $exists: true } } },{ $group: { _id: '$language' } }]).toArray();
+        genreList.forEach(doc => doc["_id"].split(",").forEach(dic => genreSet.add(dic.trim())));
+        languageList.forEach(doc => doc["_id"].split(",").forEach(dic => languageSet.add(dic.trim())));
+        genres = Array.from(genreSet).sort();
+        languages = Array.from(languageSet).sort();
+        module.exports.genresExported = genres;
+        module.exports.languagesExported = languages;
+    } catch (e) {
+        console.error(e);
+    }
+    finally {
+        await client.close();
+    }
 };
 
 /* GET home page. */
