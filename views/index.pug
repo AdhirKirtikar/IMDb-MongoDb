@@ -132,6 +132,8 @@ block content
             label(for='selLanguage') Language
           td
             select(name='language' id='selLanguage' placeholder='English' title='Select the language of the movie (hold Control to select multiple)...' multiple)
+              if typeof languages === "undefined"
+                - languages = ''
               each lang in languages
                 if typeof languageSelected === "undefined"
                   - languageSelected = ''

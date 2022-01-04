@@ -36,6 +36,7 @@
     <Content Include="Kachra.txt">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="libman.json" />
     <Content Include="public\images\favicon.ico" />
     <Content Include="routes\index.js" />
     <Content Include="package.json" />
