@@ -19,7 +19,7 @@ const populateChoices = async () => {
         `${process.env.DB_PASS}` +
         "@" +
         `${process.env.DB_NAME}` +
-        "/imdb?retryWrites=true&w=majority&authMechanism=SCRAM-SHA-1";
+        "/imdb?authMechanism=SCRAM-SHA-1&keepAlive=true&socketTimeoutMS=360000&connectTimeoutMS=360000";
     const client = await MongoClient.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true
