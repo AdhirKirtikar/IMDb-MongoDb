@@ -52,28 +52,10 @@ mixin castCard(imdb_title_id, principals)
         tr
           td Birth Details
           td #{principal.imdb_name_details.birth_details}
-        tr
-          td Date of Birth
-          td #{principal.imdb_name_details.date_of_birth}
-        tr
-          td Place of Birth
-          td #{principal.imdb_name_details.place_of_birth}
         if principal.imdb_name_details.death_details
           tr
             td Death Details
             td #{principal.imdb_name_details.death_details}
-        if principal.imdb_name_details.date_of_death
-          tr
-            td Date of Death
-            td #{principal.imdb_name_details.date_of_death}
-        if principal.imdb_name_details.place_of_death
-          tr
-            td Place of Death
-            td #{principal.imdb_name_details.place_of_death}
-        if principal.imdb_name_details.reason_of_death
-          tr
-            td Reason of Death
-            td #{principal.imdb_name_details.reason_of_death}
         tr
           td Spouses
           td #{principal.imdb_name_details.spouses_string}
