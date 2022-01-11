@@ -24,6 +24,7 @@ const populateChoices = async () => {
         useNewUrlParser: true,
         useUnifiedTopology: true
     });
+    console.log("Connected");
 
     try {
         const collection = client.db("imdb").collection("movies");

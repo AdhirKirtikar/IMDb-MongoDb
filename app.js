@@ -68,3 +68,8 @@ var server = app.listen(app.get('port'), function () {
     debug('Express server listening on port ' + server.address().port);
 });
 
+server.keepAliveTimeout = 5 * 60 * 1000;
+// Ensure all inactive connections are terminated by the ALB, by setting this a few seconds higher than the ALB idle timeout
+server.headersTimeout = 6 * 60 * 1000;
+// Ensure the headersTimeout is set higher than the keepAliveTimeout due to this nodejs regression bug: https://github.com/nodejs/node/issues/27363
+// This should be bigger than `keepAliveTimeout + your server's expected response time`

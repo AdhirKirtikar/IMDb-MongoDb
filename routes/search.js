@@ -23,9 +23,8 @@ var languages = new Array();
 var client;
 
 const mongoConnect = async () => {
-
+    console.log("Connecting to ", process.env.DB_NAME);
     const { MongoClient } = require('mongodb');
-
     const uri = "mongodb+srv://" +
         `${process.env.DB_USER}` +
         ":" +
@@ -37,6 +36,7 @@ const mongoConnect = async () => {
         useNewUrlParser: true,
         useUnifiedTopology: true
     });
+    console.log("Connected");
 };
 
 const buildQuery = (srcTitle, srcYear, srcGenre, srcLanguage, srcDuration, srcRating) => {
