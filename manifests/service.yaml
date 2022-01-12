@@ -3,9 +3,13 @@ kind: Service
 metadata:
   name: imdb-mongodb
   namespace: imdb-mongodb
+  annotations:
+    traefik.ingress.kubernetes.io/affinity: "true"
+    traefik.ingress.kubernetes.io/session-cookie-name: "sticky"  
 spec:
   selector:
     app: imdb-mongodb
   ports:
     - protocol: TCP
-      port: 4000 
+      port: 4000
+  sessionAffinity: ClientIP

@@ -4,7 +4,10 @@ metadata:
   labels:
     app: {{ .Values.namespace.name }} 
   name: {{ .Values.namespace.name }} 
-  namespace: {{ .Values.namespace.name }} 
+  namespace: {{ .Values.namespace.name }}
+  annotations:
+    traefik.ingress.kubernetes.io/affinity: "true"
+    traefik.ingress.kubernetes.io/session-cookie-name: "sticky"
 spec:
   ports:
   - port: {{ .Values.service.port }} 
@@ -13,3 +16,4 @@ spec:
   selector:
     app: {{ .Values.namespace.name }} 
   type: {{ .Values.service.type }}
+  sessionAffinity: ClientIP
