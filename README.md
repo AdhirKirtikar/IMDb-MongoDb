@@ -9,7 +9,7 @@ This is a simple Node.js Express web app in which you can search for movies base
 ## How I built it
 - This is a Node.js Express web app with only 2 routes: [index](https://github.com/AdhirKirtikar/IMDb-MongoDb/blob/master/routes/index.js) & [search](https://github.com/AdhirKirtikar/IMDb-MongoDb/blob/master/routes/search.js).
 - The source code is in this repo [IMDb-MongoDb](https://github.com/AdhirKirtikar/IMDb-MongoDb).
-- The code uses Node.js native drivers for MongoDB and connects to a MongoDB database deployment which is Multi Region Replica Set of 12 nodes.
+- The code uses Node.js native drivers for MongoDB and connects to a MongoDB database deployment which is Multi Region Replica Set of 12 nodes. (Update 20220124: Changed to MongoDB Free Tier)
 - The database consists of data from imdb sourced from a [Kaggle dataset](https://www.kaggle.com/trentpark/imdb-data).
 - The app is packaged in a [Docker container](https://hub.docker.com/repository/docker/adhirkirtikar/imdb-mongodb) _automagically_ using [GitHub actions](https://github.com/AdhirKirtikar/IMDb-MongoDb/actions). 
 - The docker container is deployed to 3-node Kubernetes cluster hosted on [Civo](https://www.civo.com) using Helm charts with ArgoCD which was installed very easily and quickly in the Civo cluster.
