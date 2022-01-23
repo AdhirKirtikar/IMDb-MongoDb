@@ -2,3 +2,6 @@
   { v: 2, key: { imdb_title_id: 1 }, name: 'imdb_title_id_1' },
   { v: 2, key: { _id: 1 }, name: '_id_' }
 ]
+
+Usage:
+db.principals.createIndex({ imdb_title_id: 1 })

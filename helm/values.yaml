@@ -7,7 +7,7 @@ service:
 
 image:
   repository: adhirkirtikar/imdb-mongodb
-  tag: 0.32
+  tag: 0.34
   pullPolicy: IfNotPresent
 
 replicaCount: 5

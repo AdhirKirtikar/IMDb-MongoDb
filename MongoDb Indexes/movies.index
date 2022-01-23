@@ -13,3 +13,13 @@
   },
   { v: 2, key: { _id: 1 }, name: '_id_' }
 ]
+
+Usage:
+db.movies.createIndex({
+      title: 1,
+      language: 1,
+      genre: 1,
+      year: 1,
+      duration: 1,
+      avg_vote: 1
+    })
